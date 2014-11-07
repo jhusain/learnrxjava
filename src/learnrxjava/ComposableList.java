@@ -5,17 +5,17 @@
  */
 package learnrxjava;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- *
  * 
  */
 public class ComposableList<T> extends ArrayList<T> {
@@ -45,7 +45,7 @@ public class ComposableList<T> extends ArrayList<T> {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        this.
+        (new ComposableList()).exercise1();
     }
 
     /*
@@ -65,10 +65,13 @@ public class ComposableList<T> extends ArrayList<T> {
      Traversing a ComposableList
     
      Unlike Lists and other collections that implement the Iterable 
-     interface, you can _not_ use Java’s for each loop to traverse a ComposableList. 
-     Instead ComposableList provides a forEach method to which you pass a lambda. The 
+     interface, you can _not_ use Java’s for each loop to traverse a Stream. 
+     Instead Stream provides a forEach method to which you pass a lambda. The 
      ComposableList invokes your lambda once for every item in the stream, and passes 
-     the item to the lambda each time.
+     the item to the lambda each time. To match the Stream interface, our
+    ComposableList also has a forEach method (inherited from ArrayList). Let's
+    solve the same problem we solved above, but this time we'll use forEach()
+    instead of the Java for each loop.
 
      Note that the code is very similar, and we get the same result whether we 
      are using the Java for each syntax or the forEach method on the ComposableList.
@@ -84,13 +87,18 @@ public class ComposableList<T> extends ArrayList<T> {
     }
 
     /*
-     Projecting Lists
+    Projecting Lists
 
-     Applying a function to a value and creating a new value is called a projection. To project one List into another, we apply a projection function to each item in the List and collect the results in a new List.
+    Applying a function to a value and creating a new value is called a 
+    projection. To project one List into another, we apply a projection 
+    function to each item in the List and collect the results in a new List.
 
-     exercise 3: Project a list  of videos into a list of {id,title} JSON objects using for each
+     exercise 3: Project a list  of videos into a list of {id,title} JSON 
+    objects using forEach
 
-     For each video, add a projected {id, title} json to the videoAndTitlePairs List.
+    For each video, add a projected {id, title} json to the videoAndTitlePairs 
+    List. You can create JSON objects like this:
+    
      */
     class Bookmark {
         public int id;
@@ -149,7 +157,7 @@ public class ComposableList<T> extends ArrayList<T> {
         ComposableList<JSON> videoAndTitlePairs = new ComposableList<JSON>();
 
         // ------------ INSERT CODE HERE! -----------------------------------
-        // Use Java's forEach function to accumulate {id, title} JSON from each 
+        // Use the forEach function to accumulate {id, title} JSON from each 
         // video. Put the results into the videoAndTitlePairs list using the 
         // List's add method. 
         // Example: videoAndTitlePairs.add(json("id", 5, "name", "Die Hard"));
@@ -203,7 +211,7 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
      exercise 5: Use map() to project a ComposableList of videos into a stream of {id,title} JSON
 
-     The good news is that unlike List, ComposableLists has a map method. 
+     Now let's use our map method to solve the previous problem.
      ComposableList.of(1,2,3).map(x -> x + 1) is equivalent to writing ComposableList.of(2,3,4)
      Let's repeat exercise 3 and collect {id, title} pairs for each video in newReleases, but this time we'll use the map method on ComposableLists instead of a for each loop on Lists
      */
