@@ -1,12 +1,10 @@
 package learnrxjava;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -15,6 +13,8 @@ import java.util.function.Predicate;
  * To learn how to stream composition works, we will first learn how to use the composition methods (map, filter, flatMap, reduce, zip) to compose together a data structure with which most developers are already familiar: A-list.
  */
 public class ComposableList<T> extends ArrayList<T> {
+    private static final long serialVersionUID = 1L;
+
     /*
     Exercise 1: Consuming the data in a list
 
@@ -1217,6 +1217,7 @@ public class ComposableList<T> extends ArrayList<T> {
     }
 
     // Static list builder method to allow us to easily build lists
+    @SafeVarargs
     public static <T> ComposableList<T> of(T... args) {
         ComposableList<T> results = new ComposableList<T>();
         for (T value : args) {
