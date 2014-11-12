@@ -8,11 +8,28 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import learnrxjava.types.Bookmark;
+import learnrxjava.types.BookmarkRow;
+import learnrxjava.types.BoxArt;
+import learnrxjava.types.BoxArtRow;
+import learnrxjava.types.ComposableList;
+import learnrxjava.types.InterestingMoment;
+import learnrxjava.types.JSON;
+import learnrxjava.types.MovieList;
+import learnrxjava.types.MovieListRow;
+import learnrxjava.types.Video;
+import learnrxjava.types.VideoRow;
+
 /**
- * Mastering concurrency is challenging, But we can make it much easier by simply as itchoosing the right abstraction to model an asynchronous operation, and then glueusing simple composition operations to glue different instances of these abstractions together to build solutions to complex problems.
- * To learn how to stream composition works, we will first learn how to use the composition methods (map, filter, flatMap, reduce, zip) to compose together a data structure with which most developers are already familiar: A-list.
+ * Mastering concurrency is challenging, But we can make it much easier by simply choosing the right 
+ * abstraction to model an asynchronous operation, and then using simple composition operations to 
+ * glue different instances of these abstractions together to build solutions to complex problems.
+ * 
+ * To learn how stream composition works, we will first learn how to use the composition methods 
+ * (map, filter, flatMap, reduce, zip) to compose together a data structure with which most developers 
+ * are already familiar: a list.
  */
-public class ComposableList<T> extends ArrayList<T> {
+public class ComposableListExercises<T> extends ArrayList<T> implements ComposableList<T> {
     private static final long serialVersionUID = 1L;
 
     /*
@@ -20,8 +37,8 @@ public class ComposableList<T> extends ArrayList<T> {
 
     Most Java developers are accustomed to consuming the data in a list using the for each loop:
      */
-    public void exercise1() {
-        ComposableList<String> names = ComposableList.of("Ben", "Jafar", "Matt", "Priya", "Brian");
+    public static void exercise1() {
+        ComposableListExercises<String> names = ComposableListExercises.of("Ben", "Jafar", "Matt", "Priya", "Brian");
 
         for (String name : names) {
             System.out.println(name);
@@ -49,8 +66,8 @@ public class ComposableList<T> extends ArrayList<T> {
     The code below performs the same operation as the previous exercise, but this time
     uses the forEach method instead of the Java forEach loop.
      */
-    public void exercise2() {
-        ComposableList<String> names = ComposableList.of("Ben", "Jafar", "Matt", "Priya", "Brian");
+    public static void exercise2() {
+        ComposableListExercises<String> names = ComposableListExercises.of("Ben", "Jafar", "Matt", "Priya", "Brian");
 
         names.forEach(name -> {
             System.out.println(name);
@@ -61,7 +78,7 @@ public class ComposableList<T> extends ArrayList<T> {
     Exercise 3: Projecting a list
 
     Applying a function to a value and creating a new value is called a 
-    projection. To project one the contents on one List into another, we apply 
+    projection. To project contents of one List into another, we apply 
     a projection function to each item in the List and collect the results in 
     a new List.
 
@@ -71,14 +88,14 @@ public class ComposableList<T> extends ArrayList<T> {
     List. You can create JSON objects like this: 
     json("id", 23, "title", "Die Hard")
      */
-    public ComposableList<JSON> exercise3() {
-        ComposableList<Video> newReleases = ComposableList.of(
+    public static ComposableList<JSON> exercise3() {
+        ComposableListExercises<Video> newReleases = ComposableListExercises.of(
                 new Video(70111470, "Die Hard", 4.0),
                 new Video(654356453, "Bad Boys", 5.0),
                 new Video(65432445, "The Chamber", 4.0),
                 new Video(675465, "Fracture", 5.0));
 
-        ComposableList<JSON> videoAndTitlePairs = new ComposableList<JSON>();
+        ComposableListExercises<JSON> videoAndTitlePairs = new ComposableListExercises<JSON>();
         
         newReleases.forEach(video -> {
            videoAndTitlePairs.add(json("id", video.id, "title", video.title));
@@ -106,7 +123,7 @@ public class ComposableList<T> extends ArrayList<T> {
     Finish the implementation of ComposableList's map method below:
      */
     public <R> ComposableList<R> map(Function<T, R> projectionFunction) {
-        ComposableList<R> results = new ComposableList<R>();
+        ComposableListExercises<R> results = new ComposableListExercises<R>();
         this.forEach(itemInList -> {
             // ------------ INSERT CODE HERE! ----------------------------
             // Apply the projectionFunction to each item in the list and add
@@ -120,13 +137,15 @@ public class ComposableList<T> extends ArrayList<T> {
         //return results;
         throw new UnsupportedOperationException("Not implemented yet.");
     }
+    
     /*
     Exercise 5: Use map() to project a ComposableList of videos into a stream of {id,title} JSON
 
-    Let's repeat exercise 3 and collect {id, title} JSON for each video in newReleases, but this time we'll use ComposableList's map method instead of the forEach method.
+    Let's repeat exercise 3 and collect {id, title} JSON for each video in newReleases, but this time we'll 
+    use ComposableList's map method instead of the forEach method.
     */
-    public ComposableList<JSON> exercise5() {
-        ComposableList<Video> newReleases = ComposableList.of(
+    public static ComposableList<JSON> exercise5() {
+        ComposableListExercises<Video> newReleases = ComposableListExercises.of(
             new Video(70111470, "Die Hard", 4.0),
             new Video(654356453, "Bad Boys", 5.0),
             new Video(65432445, "The Chamber", 4.0),
@@ -140,12 +159,14 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 6: Filtering Lists
 
-    Like projection, filtering a list is also a very common operation. To filter a list we apply a test to each item and collect the items that pass into a new list.
+    Like projection, filtering a list is also a very common operation. To filter a list we apply a test to each 
+    item and collect the items that pass into a new list.
 
-    Use forEach() to loop through the videos in the newReleases list and, if a video has a rating of 5.0, add it to the videos list.
+    Use forEach() to loop through the videos in the newReleases list and, if a video has a rating of 5.0, add it 
+    to the videos list.
      */
-    public ComposableList<Video> exercise6() {
-        ComposableList<Video> newReleases = ComposableList.of(
+    public static ComposableList<Video> exercise6() {
+        ComposableListExercises<Video> newReleases = ComposableListExercises.of(
             new Video(
                     70111470,
                     "Die Hard",
@@ -167,7 +188,7 @@ public class ComposableList<T> extends ArrayList<T> {
                     5.0
             ));
 
-        ComposableList<Video> highRatedVideos = new ComposableList<Video>();
+        ComposableListExercises<Video> highRatedVideos = new ComposableListExercises<Video>();
 
         newReleases.forEach(video -> {
             // Insert code here that adds a video to the highRatedVideos list
@@ -178,6 +199,7 @@ public class ComposableList<T> extends ArrayList<T> {
         // return highRatedVideos;
         throw new UnsupportedOperationException("Not implemented yet.");        
     }
+    
     /*
     Exercise 7: Implement filter()
 
@@ -195,7 +217,7 @@ public class ComposableList<T> extends ArrayList<T> {
     ComposableList.of(1,2,3).filter(x -> x > 1) returns ComposableList.of(2,3)
      */
     public ComposableList<T> filter(Predicate<T> predicateFunction) {
-        ComposableList<T> results = new ComposableList<T>();
+        ComposableListExercises<T> results = new ComposableListExercises<T>();
         this.forEach(itemInList -> {
             // ------------ INSERT CODE HERE! ----------------------------
             // Apply the predicateFunction to each item in the list. If the
@@ -213,13 +235,14 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 8: Query Data by Chaining Method Calls
 
-    The map() and filter() functions let us express what data we want without requiring us to specify how the data is collected. They can also be combined to create more complex queries.
+    The map() and filter() functions let us express what data we want without requiring us to specify how 
+    the data is collected. They can also be combined to create more complex queries.
     In this Exercise, we will chain map and filter to collect the IDs of videos that have a rating of 5.0.
 
      */
-    public ComposableList<Integer> exercise8() {
-        ComposableList<Video> newReleases
-            = ComposableList.of(
+    public static ComposableList<Integer> exercise8() {
+        ComposableListExercises<Video> newReleases
+            = ComposableListExercises.of(
                     new Video(
                             70111470,
                             "Die Hard",
@@ -253,24 +276,29 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 9: Querying Trees
 
-    Chaining together map() and filter() gives us a lot of expressive power. These high level functions let us express _what_ data we want, instead of specifying _how_ we want it retrieved. Queries written with map and filter are general enough to be applied to any data source including Lists, Java 8 Streams, and Reactive Streams. That means that our queries can easily be modified to run in parallel or asynchronously simply by switching the underlying data source from a List to a Java 8 Parallel Stream or an Rx Observable respectively.
+    Chaining together map() and filter() gives us a lot of expressive power. These high level functions let us 
+    express _what_ data we want, instead of specifying _how_ we want it retrieved. Queries written with map and 
+    filter are general enough to be applied to any data source including Lists, Java 8 Streams, and Reactive Streams. 
+    That means that our queries can easily be modified to run in parallel or asynchronously simply by switching 
+    the underlying data source from a List to a Java 8 Parallel Stream or an Rx Observable respectively.
 
-    In addition to flat lists, sometimes we need to query Trees. In the exercise below, we will use two nested forEach() calls to retrieve the video IDs from each movieList and accumulate the results into a new List.
+    In addition to flat lists, sometimes we need to query Trees. In the exercise below, we will use two nested 
+    forEach() calls to retrieve the video IDs from each movieList and accumulate the results into a new List.
      */
-    public ComposableList<Integer> exercise9() {
-        ComposableList<MovieList> movieLists = ComposableList.of(
+    public static ComposableList<Integer> exercise9() {
+        ComposableListExercises<MovieList> movieLists = ComposableListExercises.of(
             new MovieList(
                 "New Releases",
-                ComposableList.of(
+                ComposableListExercises.of(
                         new Video(70111470, "Die Hard", 4.0),
                         new Video(654356453, "Bad Boys", 5.0))),
             new MovieList(
                 "Dramas",
-                ComposableList.of(
+                ComposableListExercises.of(
                         new Video(65432445, "The Chamber", 4.0),
                         new Video(675465, "Fracture", 5.0))));
 
-        ComposableList<Integer> allVideoIdsInMovieLists = new ComposableList<Integer>();
+        ComposableListExercises<Integer> allVideoIdsInMovieLists = new ComposableListExercises<Integer>();
 
         // ------------   INSERT CODE HERE!  -----------------------------------
         // Use two nested forEach loops to flatten the movieLists into a list of
@@ -283,9 +311,14 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 10: Implement concatMap()
 
-    To flatten trees with nested forEach expressions we accumlate the results in a new flat list. Querying a List of data from a Tree is a very common operation. Ideally we'd be able to use a helper function to do the heavy lifting for us. 
+    To flatten trees with nested forEach expressions we accumlate the results in a new flat list. Querying a List 
+    of data from a Tree is a very common operation. Ideally we'd be able to use a helper function to do the heavy 
+    lifting for us. 
 
-    Let's implement the concatMap() method for List. Like map(), the concatMap() function applies a projection function to each item in a list. However the projection function passed to concatMap tranforms each individual value into a _list of values_, creating a tree structure. Before returning the tree, the concatMap method flattens the tree by concatenating each inner list together in order. Here's an example of concatMap in action:
+    Let's implement the concatMap() method for List. Like map(), the concatMap() function applies a projection 
+    function to each item in a list. However the projection function passed to concatMap tranforms each individual 
+    value into a _list of values_, creating a tree structure. Before returning the tree, the concatMap method 
+    flattens the tree by concatenating each inner list together in order. Here's an example of concatMap in action:
 
     ComposableList
         .of(
@@ -300,7 +333,7 @@ public class ComposableList<T> extends ArrayList<T> {
      */   
     public <R> ComposableList<R> concatMap(
         Function<T, ComposableList<R>> projectionFunctionThatReturnsList) {
-        ComposableList<R> results = new ComposableList<R>();
+        ComposableListExercises<R> results = new ComposableListExercises<R>();
         for (T itemInList : this) {
             // ------------ INSERT CODE HERE! ----------------------------
             // Apply the projection function to each item in the list.
@@ -315,24 +348,26 @@ public class ComposableList<T> extends ArrayList<T> {
         //return results;
         throw new UnsupportedOperationException("Not implemented yet.");
     }
+    
     /*
-    As you may have already guessed, the ComposableList class has the concatMap method. The concatMap method may seem pretty abstract at first, and it may not be immediately obvious how it can be used to transform data in a tree. In the next exercise we will combine this function with the map function to query a tree.
+    As you may have already guessed, the ComposableList class has the concatMap method. The concatMap method 
+    may seem pretty abstract at first, and it may not be immediately obvious how it can be used to transform 
+    data in a tree. In the next exercise we will combine this function with the map function to query a tree.
 
     exercise 11: Use map() and concatMap() to project and flatten the movieLists into a stream of video ids
 
     Hint: nest a map() call within a concatMap().
      */
-
-    public ComposableList<Integer> exercise11() {
-        ComposableList<MovieList> movieLists = ComposableList.of(
+    public static ComposableList<Integer> exercise11() {
+        ComposableListExercises<MovieList> movieLists = ComposableListExercises.of(
                 new MovieList(
                         "New Releases", // name
-                        ComposableList.of( // videos
+                        ComposableListExercises.of( // videos
                                 new Video(70111470, "Die Hard", 4.0),
                                 new Video(654356453, "Bad Boys", 5.0))),
                 new MovieList(
                         "Dramas",
-                        ComposableList.of(
+                        ComposableListExercises.of(
                                 new Video(65432445, "The Chamber", 4.0),
                                 new Video(675465, "Fracture", 5.0))));
 
@@ -347,25 +382,31 @@ public class ComposableList<T> extends ArrayList<T> {
         // **************ANSWER END***************//
         throw new UnsupportedOperationException("Not implemented yet.");
     }
+    
     /*
     exercise 12: Retrieve id, title, and a 150x200 box art url for every video
 
-    Mastering the combination of map() and concatMap() is key to effective functional programming. You're half way there! Let's try a more complicated example...
+    Mastering the combination of map() and concatMap() is key to effective functional programming. You're half way 
+    there! Let's try a more complicated example...
 
-    You've managed to flatten a tree that's two levels deep, let's try for three! Let's say that instead of a single boxart url on each video, we had a collection of boxart objects, each with a different size and url. Create a query that selects {id, title, boxart} json for every video in the movieLists. This time though, the boxart property in the result will be the url of the boxart object with dimensions of 150x200px. Let's see if you can solve this problem using _only_ map(), concatMap(), and filter(). No other methods are allowed, including the List::get method.
+    You've managed to flatten a tree that's two levels deep, let's try for three! Let's say that instead of a 
+    single boxart url on each video, we had a collection of boxart objects, each with a different size and url. 
+    Create a query that selects {id, title, boxart} json for every video in the movieLists. This time though, 
+    the boxart property in the result will be the url of the boxart object with dimensions of 150x200px. Let's 
+    see if you can solve this problem using _only_ map(), concatMap(), and filter(). No other methods are allowed, 
+    including the List::get method.
     */
-
-    public ComposableList<JSON> exercise12() {
-        ComposableList<MovieList> movieLists = ComposableList.of(
+    public static ComposableList<JSON> exercise12() {
+        ComposableListExercises<MovieList> movieLists = ComposableListExercises.of(
             new MovieList(
                 "Instant Queue",
-                ComposableList.of(
+                ComposableListExercises.of(
                     new Video(
                         70111470,
                         "Die Hard",
                         5.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg")
                         )),
                     new Video(
@@ -373,7 +414,7 @@ public class ComposableList<T> extends ArrayList<T> {
                         "Bad Boys",
                         4.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg"),
                             new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg")
                         ))
@@ -381,13 +422,13 @@ public class ComposableList<T> extends ArrayList<T> {
             ),
             new MovieList(
                 "New Releases",
-                ComposableList.of(
+                ComposableListExercises.of(
                     new Video(
                         65432445,
                         "The Chamber",
                         4.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg")
                         )),
                     new Video(
@@ -395,7 +436,7 @@ public class ComposableList<T> extends ArrayList<T> {
                         "Fracture",
                         5.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
                             new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg"),
                             new BoxArt(300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg")
@@ -406,10 +447,10 @@ public class ComposableList<T> extends ArrayList<T> {
 
         // Use one or more map, concatAll, and filter calls to create an ComposableList with the following items
         // {
-        //   {"id": 675465,"title": "Fracture","boxart":"http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
-        //   {"id": 65432445,"title": "The Chamber","boxart":"http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
-        //   {"id": 654356453,"title": "Bad Boys","boxart":"http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" },
         //   {"id": 70111470,"title": "Die Hard","boxart":"http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" }
+        //   {"id": 654356453,"title": "Bad Boys","boxart":"http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" },
+        //   {"id": 65432445,"title": "The Chamber","boxart":"http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
+        //   {"id": 675465,"title": "Fracture","boxart":"http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
         // };
 
         // return movieLists // Complete this expression!
@@ -419,33 +460,38 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 13: Reducing Lists
 
-    Sometimes we need to aggregate the values in a collection and produce a single value. For example let's say we need to find the largest integer in a list. We can't use a filter() operation, because it only examines one item at a time. To find the largest integer we need to compare at least two values at a time.
+    Sometimes we need to aggregate the values in a collection and produce a single value. For example let's say 
+    we need to find the largest integer in a list. We can't use a filter() operation, because it only examines 
+    one item at a time. To find the largest integer we need to compare at least two values at a time.
 
-    One approach could be to select an item in the list as the assumed largest number (perhaps the first item), and then compare that value to every other item in the list. Each time we come across a number that was larger than our assumed largest number we'd replace the assumed largest value with the larger value and continue.
+    One approach could be to select an item in the list as the assumed largest number (perhaps the first item), 
+    and then compare that value to every other item in the list. Each time we come across a number that was 
+    larger than our assumed largest number we'd replace the assumed largest value with the larger value and continue.
 
-    In this example we use forEach to find the largest box art. Each time we examine a new boxart we update a variable with the currently known maximumSize. If the boxart is smaller than the maximum size, we discard it.If it's larger, we keep track of it. Finally we're left with a single boxart which must necessarily be the largest.
+    In this example we use a loop to find the largest box art. Each time we examine a new boxart we update a 
+    variable with the currently known maximumSize. If the boxart is smaller than the maximum size, we discard it.
+    If it's larger, we keep track of it. Finally we're left with a single boxart which must necessarily be the largest.
     */
-    public BoxArt exercise13() {
-        ComposableList<BoxArt> boxarts = ComposableList.of(
-            new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
-            new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg"),
-            new BoxArt(300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg"),
-            new BoxArt(425, 150, "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg")
-        );
+    public static BoxArt exercise13() {
+        ComposableListSolution<BoxArt> boxarts = ComposableListSolution.of(
+                new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
+                new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg"),
+                new BoxArt(425, 150, "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg"),
+                new BoxArt(300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg")
+            );
 
-        int currentBoxArtSize = 0;
-        int currentSize = 0;
-        int maxSize = -1;
-        BoxArt largestBoxart = null;
+            int currentSize = 0;
+            int maxSize = -1;
+            BoxArt largestBoxart = null;
 
-        for (BoxArt boxart: boxarts) {
-            currentBoxArtSize = boxart.width * boxart.height;
-            if (currentSize > maxSize) {
-                // ****** INSERT CODE HERE ********
-                // Assign the largestBoxart to the current boxart, and assign the maxSize to the currentSize.
-                // ****** INSERT CODE HERE ********
+            for (BoxArt boxart: boxarts) {
+                currentSize = boxart.width * boxart.height;
+                if (currentSize > maxSize) {
+                    // ****** INSERT CODE HERE ********
+                    // Assign the largestBoxart to the current boxart, and assign the maxSize to the currentSize.
+                    // ****** INSERT CODE HERE ********
+                }
             }
-        }
 
         // return largestBoxart;
         throw new UnsupportedOperationException("Not implemented yet.");
@@ -453,11 +499,21 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 14: Implement reduce()
 
-    Combining the value produced from the last computation with each value until a single value is produced is a very common pattern. Many types of operations require us to process at least two items a time like computing the minimum or the maximum value in a List. Let's create a helper function called reduce() to aggregate a single value from a list of values.
+    Combining the value produced from the last computation with each value until a single value is produced 
+    is a very common pattern. Many types of operations require us to process at least two items a time like 
+    computing the minimum or the maximum value in a List. Let's create a helper function called reduce() to 
+    aggregate a single value from a list of values.
 
-    Reduce recursively combines the results of the last aggregation with the next item in the list until the values in the list are exhausted, and then returns a list containing only the last aggregation value. Reduce uses the first value in the list as the initial aggregation value. For example ComposableList.of(1,2,3).reduce((acc,curr) -> acc + curr) is structurally equivalent to ComposableList.of(6).  In the previous example, theBinary function is invoked three times. 
+    Reduce recursively combines the results of the last aggregation with the next item in the list until the 
+    values in the list are exhausted, and then returns a list containing only the last aggregation value. 
+    Reduce uses the first value in the list as the initial aggregation value. For example 
+    ComposableList.of(1,2,3).reduce((acc,curr) -> acc + curr) is structurally equivalent to ComposableList.of(6).  
+    In the previous example, theBinary function is invoked three times. 
 
-    The first time the binary lambda function is invoked the accumulated value acc is 1 (the first value in the list) and the current value curr is 2 (the second value in the list). The next time the binary lambda function is invoked, the accumulated value is the result of the previous function invocation (3) and the current value is the next value in the list (3). 
+    The first time the binary lambda function is invoked the accumulated value acc is 1 (the first value in the 
+    list) and the current value curr is 2 (the second value in the list). The next time the binary lambda function 
+    is invoked, the accumulated value is the result of the previous function invocation (3) and the current value 
+    is the next value in the list (3). 
      */
     public ComposableList<T> reduce(BiFunction<T, T, T> combiner) {
         int counter = 1;
@@ -476,13 +532,14 @@ public class ComposableList<T> extends ArrayList<T> {
             // we've exhausted the entire list and are left with only one function.
             while (counter < this.size()) {
                 // ****** INSERT CODE HERE ********
-                // Set accumulatedValue to the result of passing accumulatedValue and the list value at the counter index to the combiner function.
+                // Set accumulatedValue to the result of passing accumulatedValue and the list value at the 
+                // counter index to the combiner function.
                 // ****** INSERT CODE HERE ********
 
                 counter++;
             }
 
-            //return ComposableList.of(accumulatedValue);
+            //return ComposableListExercises.of(accumulatedValue);
         }
 
         throw new UnsupportedOperationException("Not implemented yet.");
@@ -491,9 +548,16 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 15: Implement a reduce overload that accepts an initial value
 
-    Sometimes when we reduce a list, we want the final reduced value to be a different type than the items stored in the list. For example, let's say we have a list of videos and we want to reduce them to a single map where the key is the video id and the value is the video's title.
+    Sometimes when we reduce a list, we want the final reduced value to be a different type than the items 
+    stored in the list. For example, let's say we have a list of videos and we want to reduce them to a 
+    single map where the key is the video id and the value is the video's title.
 
-    This overload of reduce accepts a initial value, which is used as the accumulated value the first time the binary function is run instead of the first item in the List. Just as in the previous implementation of reduce, the results of the previous function invocation and the current item in the list are passed to the binary function recursively until there are no more items in the list to reduce. Finally The reduce method produces a list containing only a single reduced value. Note that binary function will always return the same type as the initial accumulated value. 
+    This overload of reduce accepts a initial value, which is used as the accumulated value the first time 
+    the binary function is run instead of the first item in the List. Just as in the previous implementation 
+    of reduce, the results of the previous function invocation and the current item in the list are passed 
+    to the binary function recursively until there are no more items in the list to reduce. Finally The 
+    reduce method produces a list containing only a single reduced value. Note that binary function will 
+    always return the same type as the initial accumulated value. 
 
     ComposableList
         .of(
@@ -508,7 +572,7 @@ public class ComposableList<T> extends ArrayList<T> {
 
         // If the list is empty, do nothing
         if (this.size() == 0) {
-            return new ComposableList<R>();
+            return new ComposableListExercises<R>();
         } else {
             counter = 0;
             accumulatedValue = initialValue;
@@ -521,18 +585,17 @@ public class ComposableList<T> extends ArrayList<T> {
                 counter++;
             }
 
-            return ComposableList.of(accumulatedValue);
+            return ComposableListExercises.of(accumulatedValue);
         }
     }
 
-    ;
     /*        
     Exercise 16: Retrieve the largest rating.
 
     Use the right reduce overload to select the maximum value in a list of ratings.
     */
-    public ComposableList<Integer> exercise16() {
-        ComposableList<Integer> ratings = ComposableList.of(2, 3, 1, 4, 5);
+    public static ComposableList<Integer> exercise16() {
+        ComposableListExercises<Integer> ratings = ComposableListExercises.of(2, 3, 5, 1, 4);
         // You should return a list containing only the largest rating. Remember that reduce always
         // returns a list with one item.
 
@@ -544,14 +607,15 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 17: Retrieve url of the largest boxart
 
-    Now let's try combining reduce() with our other functions to build more complex queries. Let's try combining reduce() with map() to reduce multiple boxart objects to a single value: the url of the largest box art.
+    Now let's try combining reduce() with our other functions to build more complex queries. Let's try combining 
+    reduce() with map() to reduce multiple boxart objects to a single value: the url of the largest box art.
      */
-    public ComposableList<String> exercise17() {
-        ComposableList<BoxArt> boxarts = ComposableList.of(
+    public static ComposableList<String> exercise17() {
+        ComposableListExercises<BoxArt> boxarts = ComposableListExercises.of(
                 new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
                 new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg"),
-                new BoxArt(300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg"),
-                new BoxArt(425, 150, "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg")
+                new BoxArt(425, 150, "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg"),
+                new BoxArt(300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg")
         );
 
         // You should return a list containing only the largest box art. Remember that reduce always
@@ -563,10 +627,12 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 18: Reducing with an initial value
 
-    Sometimes when we reduce a list, we want the reduced value to be a different type than the items stored in the list. Let's say we have a list of videos and we want to reduce them to a single map where the key is the video id and the value is the video's title.
+    Sometimes when we reduce a list, we want the reduced value to be a different type than the items stored 
+    in the list. Let's say we have a list of videos and we want to reduce them to a single map where the key 
+    is the video id and the value is the video's title.
      */
-    public ComposableList<Map<Integer, String>> exercise18() {
-        ComposableList<Video> videos = ComposableList.of(
+    public static ComposableList<Map<Integer, String>> exercise18() {
+        ComposableListExercises<Video> videos = ComposableListExercises.of(
             new Video(
                 65432445,
                 "The Chamber",
@@ -607,10 +673,13 @@ public class ComposableList<T> extends ArrayList<T> {
             new HashMap<Integer, String> (),
             (accumulatedMap, video) -> {
                 // ************ INSERT CODE HERE ************
-                // Remember that you the functions passed to map, filter, concatMap, reduce, and zip can only change objects created inside the function.
-                // That means that you cannot simply add the video to the accumulatedMap. You must make a copy of the accumulated map, and add the video title to that.
-                // Granted, this is very inefficient. However there are libraries that provide immutable maps to make copying maps very efficient, allowing this to be a viable approach.
-                // For the purpose of this exercise simply copy the accumulatedMap into a new map, add the video information to the copy, and return the copy.
+                // Remember that you the functions passed to map, filter, concatMap, reduce, and zip can only 
+                // change objects created inside the function. That means that you cannot simply add the video to 
+                // the accumulatedMap. You must make a copy of the accumulated map, and add the video title to that.
+                // Granted, this is very inefficient. However there are libraries that provide immutable maps to make 
+                // copying maps very efficient, allowing this to be a viable approach. For the purpose of this 
+                // exercise simply copy the accumulatedMap into a new map, add the video information to the copy, 
+                // and return the copy.
                 // ************ INSERT CODE HERE ************
                 throw new UnsupportedOperationException("Not implemented yet.");
             });
@@ -621,19 +690,21 @@ public class ComposableList<T> extends ArrayList<T> {
 
     Nice work. Now let's try combining reduce() with our other functions to build more complex queries.
     
-    This is a variation of the problem we solved earlier, where we retrieved the url of the boxart with a width of 150px. This time we'll use reduce() instead of filter() to retrieve the _smallest_ box art in the boxarts list.
+    This is a variation of the problem we solved earlier, where we retrieved the url of the boxart with a 
+    width of 150px. This time we'll use reduce() instead of filter() to retrieve the _smallest_ box art in 
+    the boxarts list.
      */
-    public JSON exercise19() {
-        ComposableList<MovieList> movieLists = ComposableList.of(
+    public static ComposableList<JSON> exercise19() {
+        ComposableListExercises<MovieList> movieLists = ComposableListExercises.of(
                 new MovieList(
                     "New Releases",
-                    ComposableList.of(
+                    ComposableListExercises.of(
                         new Video(
                             70111470,
                             "Die Hard",
                             4.0,
                             null,
-                            ComposableList.of(
+                            ComposableListExercises.of(
                                     new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg"),
                                     new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/DieHard200.jpg")
                             )),
@@ -642,7 +713,7 @@ public class ComposableList<T> extends ArrayList<T> {
                             "Bad Boys",
                             5.0,
                             null,
-                            ComposableList.of(
+                            ComposableListExercises.of(
                                     new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg"),
                                     new BoxArt(140, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg")
                             ))
@@ -650,13 +721,13 @@ public class ComposableList<T> extends ArrayList<T> {
                 ),
                 new MovieList(
                     "Thrillers",
-                    ComposableList.of(
+                    ComposableListExercises.of(
                         new Video(
                             65432445,
                             "The Chamber",
                             3.0,
                             null,
-                            ComposableList.of(
+                            ComposableListExercises.of(
                                 new BoxArt(130, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg"),
                                 new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg")
                             )),
@@ -665,7 +736,7 @@ public class ComposableList<T> extends ArrayList<T> {
                             "Fracture",
                             4.0,
                             null,
-                            ComposableList.of(
+                            ComposableListExercises.of(
                                 new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
                                 new BoxArt(120, 200, "http://cdn-0.nflximg.com/images/2891/Fracture120.jpg"),
                                 new BoxArt(300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg")
@@ -685,7 +756,7 @@ public class ComposableList<T> extends ArrayList<T> {
         // Uncomment the code below and finish the expression.
         /*
         return movieLists.
-            concatMap(function(movieList) {
+            concatMap(movieList -> {
 
             })
          */
@@ -695,12 +766,16 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 20: Zipping Lists
 
-    Sometimes we need to combine the items in two different list by index. If you visualize a zipper, where each side is a list, and each tooth is an item, you'll have a good idea of how the zip operation works. Before we learn about zip() though, we'll solve a similar problem using forEach.
+    Sometimes we need to combine the items in two different list by index. If you visualize a zipper, where each 
+    side is a list, and each tooth is an item, you'll have a good idea of how the zip operation works. Before we 
+    learn about zip() though, we'll solve a similar problem using forEach.
 
-    In this exercise we'll combine videos and bookmarks by index. Use the forEach method to traverse the videos and bookmarks list at the same time. For each video and bookmark pair, create a {videoId, bookmarkId} JSON and add it to the videoIdAndBookmarkIdPairs list.
+    In this exercise we'll combine videos and bookmarks by index. Use the forEach method to traverse the videos 
+    and bookmarks list at the same time. For each video and bookmark pair, create a {videoId, bookmarkId} JSON 
+    and add it to the videoIdAndBookmarkIdPairs list.
     */
-    public ComposableList<JSON> exercise20() {
-        ComposableList<Video> videos = ComposableList.of(
+    public static ComposableList<JSON> exercise20() {
+        ComposableListExercises<Video> videos = ComposableListExercises.of(
                 new Video(
                         70111470,
                         "Die Hard",
@@ -723,16 +798,17 @@ public class ComposableList<T> extends ArrayList<T> {
                 )
         );
         
-        ComposableList<Bookmark> bookmarks = ComposableList.of(
+        ComposableListExercises<Bookmark> bookmarks = ComposableListExercises.of(
                 new Bookmark(470, 23432),
                 new Bookmark(453, 234324),
                 new Bookmark(445, 987834)
         );
 
-        ComposableList<JSON> videoIdAndBookmarkIdPairs = new ComposableList<JSON>();
+        ComposableListExercises<JSON> videoIdAndBookmarkIdPairs = new ComposableListExercises<JSON>();
 
         for (int counter = 0; counter < Math.min(videos.size(), bookmarks.size()); counter++) {
-            // Insert code here to create a {videoId, bookmarkId} JSON using json() and add it to the videoIdAndBookmarkIdPairs list.
+            // Insert code here to create a {"videoId" : videoId, "bookmarkId" : bookmarkId} JSON 
+            // using json() and add it to the videoIdAndBookmarkIdPairs list.
         }
 
         // return videoIdAndBookmarkIdPairs;
@@ -742,35 +818,38 @@ public class ComposableList<T> extends ArrayList<T> {
     /*
     Exercise 21: Implement zip
 
-    Let's add a static zip() function to the ComposableList type. The zip function accepts a combiner binary function, traverses each list at the same time, and calls the combiner function on the current item on the left-hand-side and right-hand-side. The zip function requires an item from each list in order to call the combiner function, therefore the list returned by zip will only be as large as the smallest input list.
+    Let's add a static zip() function to the ComposableList type. 
+    The zip function accepts a combiner binary function, traverses each list at the same time, and calls 
+    the combiner function on the current item on the left-hand-side and right-hand-side. The zip function 
+    requires an item from each list in order to call the combiner function, therefore the list returned by 
+    zip will only be as large as the smallest input list.
 
     ComposableList.zip(
         ComposableList.of(1,2,3), 
         ComposableList.of(4,5,6), 
         (x,y) -> x + y) is structurally equivalent to ComposableList.of(5,7,9)
      */
-    // JSON.stringify(List.zip([1,2,3],[4,5,6], function(left, right) { return left + right })) == '[5,7,9]' accumulatedValue + currentValue; }); == [6];
     public static <T0,T1,R> ComposableList<R> zip(ComposableList<T0> left, ComposableList<T1> right, BiFunction<T0,T1, R> combinerFunction) {
-        ComposableList<R> results = new ComposableList<R>();
+        ComposableListExercises<R> results = new ComposableListExercises<R>();
 
         for (int counter = 0; counter < Math.min(left.size(), right.size()); counter++) {
-            // Add code here to apply the combinerFunction to the left and right-hand items in the respective lists, and add the result to the results List
+            // Add code here to apply the combinerFunction to the left and right-hand items in the 
+            // respective lists, and add the result to the results List
         }
 
         // return results;
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    ;
-            
     /*
     Exercise 22: Combine videos and bookmarks by index
 
-    Let's repeat exercise 20, but this time let's use our new zip() function. For each video and bookmark pair, create a {videoId, bookmarkId} JSON pair.
+    Let's repeat exercise 20, but this time let's use our new zip() function. For each video and bookmark pair, 
+    create a {"videoId" : videoId, "bookmarkId" : bookmarkId} JSON pair.
     */
 
-    public ComposableList<JSON> exercise22() {
-        ComposableList<Video> videos = ComposableList.of(
+    public static ComposableList<JSON> exercise22() {
+        ComposableListExercises<Video> videos = ComposableListExercises.of(
                 new Video(
                 70111470,
                 "Die Hard",
@@ -793,37 +872,41 @@ public class ComposableList<T> extends ArrayList<T> {
             )
         );
         
-        ComposableList<Bookmark> bookmarks = ComposableList.of(
+        ComposableListExercises<Bookmark> bookmarks = ComposableListExercises.of(
             new Bookmark(470, 23432),
             new Bookmark(453, 234324),
             new Bookmark(445, 987834)
         );
 
         //... finish this expression
-        // return ComposableList.zip( 
+        // return ComposableListExercises.zip( 
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
     Exercise 23: Retrieve each video's id, title, middle interesting moment time, and smallest box art url.
 
-    This is a variation of the problem we solved earlier. This time each video has an interesting moments collection, each representing a time during which a screenshot is interesting or representative of the title as a whole. Notice that both the boxarts and interestingMoments lists are located at the same depth in the tree. Retrieve the time of the middle interesting moment and the smallest box art url simultaneously with zip(). Return an {id, title, time, url} JSON object for each video.
+    This is a variation of the problem we solved earlier. This time each video has an interesting moments 
+    collection, each representing a time during which a screenshot is interesting or representative of the 
+    title as a whole. Notice that both the boxarts and interestingMoments lists are located at the same depth 
+    in the tree. Retrieve the time of the middle interesting moment and the smallest box art url simultaneously 
+    with zip(). Return an {id, title, time, url} JSON object for each video.
      */
-    ComposableList<JSON> exercise23() {
-        ComposableList<MovieList> movieLists = ComposableList.of(
+    public static ComposableList<JSON> exercise23() {
+        ComposableListExercises<MovieList> movieLists = ComposableListExercises.of(
             new MovieList(
                 "New Releases",
-                ComposableList.of(
+                ComposableListExercises.of(
                     new Video(
                         70111470,
                         "Die Hard",
                         4.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg"),
                             new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/DieHard200.jpg")
                         ),
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new InterestingMoment("End", 213432),
                             new InterestingMoment("Start", 64534),
                             new InterestingMoment("Middle", 323133)
@@ -834,11 +917,11 @@ public class ComposableList<T> extends ArrayList<T> {
                         "Bad Boys",
                         5.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg"),
                             new BoxArt(140, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg")
                         ),
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new InterestingMoment("End", 54654754),
                             new InterestingMoment("Middle", 6575665)
                         )
@@ -847,17 +930,17 @@ public class ComposableList<T> extends ArrayList<T> {
             ),
             new MovieList(
                 "Instant Queue",
-                ComposableList.of(
+                ComposableListExercises.of(
                     new Video(
                         65432445,
                         "The Chamber",
                         4.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(130, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg"),
                             new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg")
                         ),
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new InterestingMoment("End", 132423),
                             new InterestingMoment("Start", 54637425),
                             new InterestingMoment("Middle", 3452343)
@@ -868,12 +951,12 @@ public class ComposableList<T> extends ArrayList<T> {
                         "Fracture",
                         5.0,
                         null,
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
                             new BoxArt(120, 200, "http://cdn-0.nflximg.com/images/2891/Fracture120.jpg"),
                             new BoxArt(300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg")
                         ),
-                        ComposableList.of(
+                        ComposableListExercises.of(
                             new InterestingMoment("End", 45632456),
                             new InterestingMoment("Start", 234534),
                             new InterestingMoment("Middle", 3453434)
@@ -886,7 +969,7 @@ public class ComposableList<T> extends ArrayList<T> {
         //------------ COMPLETE THIS EXPRESSION --------------
         /*
         return movieLists.
-            concatMap(function(movieList) {
+            concatMap(movieList -> {
 
             });
         */
@@ -894,70 +977,8 @@ public class ComposableList<T> extends ArrayList<T> {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    /*
-    Exercise 24: Converting from Lists to Trees
-
-    Now that we've learned the five operators let's flex our muscles and write some powerful queries.
-
-    When information is organized in a tree like a JSON expression, relationships point from parent to child. In relational systems like databases, relationships point from children to their parents. Both ways of organizing information are equivalent, and depending on the circumstances, we might get data organized in one way or another. It may surprise you to learn that you can use the 5 query functions you already know to easily convert between these representations. In other words, not only can you query lists from trees, you can query trees from lists.
-
-    We have 2 lists each containing lists, and videos respectively. Each video has a listId field indicating its parent list. We want to build a list of list objects, each with a name and a videos list. The videos list will contain the video's id and title. In other words we want to build the following structure:
-
-    ComposableList.of(
-        new MovieList(
-            "New Releases",
-            ComposableList.of(
-                new Video(
-                    65432445,
-                    "The Chamber"
-                ),
-                new Video(
-                    675465,
-                    "Fracture"
-                )
-            )
-        ),
-        new MovieList(
-            "Thrillers",
-            ComposableList.of(
-                new Video(
-                    70111470,
-                    "Die Hard"
-                ),
-                new Video(
-                    654356453,
-                    "Bad Boys"
-                )
-            )
-        )
-    )
-    */
-    class MovieListRow {
-
-        private int id;
-        private String name;
-
-        public MovieListRow(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-    }
-
-    class VideoRow {
-
-        private int listId;
-        private int videoId;
-        private String name;
-
-        public VideoRow(int listId, int videoId, String name) {
-            this.listId = listId;
-            this.videoId = videoId;
-            this.name = name;
-        }
-    }
-
-    public ComposableList<List<MovieList>> exercise24() {
-        ComposableList<MovieListRow> lists = ComposableList.of(
+    public static ComposableList<List<MovieList>> exercise24() {
+        ComposableListExercises<MovieListRow> lists = ComposableListExercises.of(
             new MovieListRow(
                     5434364,
                     "New Releases"
@@ -967,7 +988,7 @@ public class ComposableList<T> extends ArrayList<T> {
                     "Thrillers"
             )
         );
-        ComposableList<VideoRow> videos = ComposableList.of(
+        ComposableList<VideoRow> videos = ComposableListExercises.of(
             new VideoRow(
                     5434364,
                     65432445,
@@ -994,85 +1015,8 @@ public class ComposableList<T> extends ArrayList<T> {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    /*
-    Exercise 25: Converting from Lists to Deeper Trees
-
-    Looks like you figured out that you can use map and filter to join two different lists by a key. Now let's try a more complex example...
-
-    Let's try creating a deeper tree structure. This time we have 4 seperate lists each containing lists, videos, boxarts, and bookmarks respectively. Each object has a parent id, indicating its parent. We want to build a list of list objects, each with a name and a videos list. The videos list will contain the video's id, title, bookmark time, and smallest boxart url. In other words we want to build the following structure:
-
-    ComposableList.of(
-        new MovieList(
-            "New Releases",
-                ComposableList.of(
-                    new Video(
-                        "The Chamber",
-                        32432,
-                        5.0
-                    ),
-                    new Video(
-                        675465,
-                        "Fracture",
-                        3.0
-                    )
-                )
-            ),
-        new MovieList(
-            "Thrillers",
-            ComposableList.of(
-                new Video(
-                    70111470,
-                    "Die Hard",
-                    5.0
-                ),
-                new Video(
-                    654356453,
-                    "Bad Boys",
-                    4.0
-                )
-            )
-        )
-    )
-     */
-    class BoxArt {
-        public int width;
-        public int height;
-        public String url;
-
-        public BoxArt(int width, int height, String url) {
-            this.width = width;
-            this.height = height;
-            this.url = url;
-        }
-    }
-
-    class BoxArtRow {
-
-        public int videoId;
-        public int width;
-        public int height;
-        public String url;
-
-        public BoxArtRow(int videoId, int width, int height, String url) {
-            this.videoId = videoId;
-            this.width = width;
-            this.height = height;
-            this.url = url;
-        }
-    }
-
-    class BookmarkRow {
-        public int videoId;
-        public int bookmarkId;
-
-        public BookmarkRow(int videoId, int bookmarkId) {
-            this.videoId = videoId;
-            this.bookmarkId = bookmarkId;
-        }
-    }
-
-    public ComposableList<List<MovieList>> exercise25() {
-        ComposableList<MovieListRow> lists = ComposableList.of(
+    public static ComposableList<List<MovieList>> exercise25() {
+        ComposableListExercises<MovieListRow> lists = ComposableListExercises.of(
             new MovieListRow(
                 5434364,
                 "New Releases"
@@ -1082,7 +1026,7 @@ public class ComposableList<T> extends ArrayList<T> {
                 "Thrillers"
             )
         );
-        ComposableList<VideoRow>  videos = ComposableList.of(
+        ComposableListExercises<VideoRow>  videos = ComposableListExercises.of(
             new VideoRow(
                 5434364,
                 65432445,
@@ -1104,7 +1048,7 @@ public class ComposableList<T> extends ArrayList<T> {
                 "Bad Boys"
             )
         );
-        ComposableList<BoxArtRow> boxarts = ComposableList.of(
+        ComposableListExercises<BoxArtRow> boxarts = ComposableListExercises.of(
                 new BoxArtRow(65432445, 130, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg"),
                 new BoxArtRow(65432445, 200, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg"),
                 new BoxArtRow(675465, 200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
@@ -1115,7 +1059,7 @@ public class ComposableList<T> extends ArrayList<T> {
                 new BoxArtRow(654356453, 200, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg"),
                 new BoxArtRow(654356453, 140, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg")
         );
-        ComposableList<BookmarkRow> bookmarks = ComposableList.of(
+        ComposableListExercises<BookmarkRow> bookmarks = ComposableListExercises.of(
                 new BookmarkRow(65432445, 32432),
                 new BookmarkRow(675465, 3534543),
                 new BookmarkRow(70111470, 645243),
@@ -1127,83 +1071,6 @@ public class ComposableList<T> extends ArrayList<T> {
         throw new UnsupportedOperationException("Not implemented yet.");
 
     }
-
-    class Bookmark {
-        @Override
-        public String toString() {
-            return "Bookmark{" + "id=" + id + ", offset=" + offset + '}';
-        }
-        public int id;
-        public int offset;
-        public Bookmark(int id, int offset) {
-            this.id = id;
-            this.offset = offset;
-        }
-    }
-
-    class InterestingMoment {
-        @Override
-        public String toString() {
-            return "InterestingMoment{" + "type=" + type + ", time=" + time + '}';
-        }
-        String type;
-        int time;
-        public InterestingMoment(String type, int time) {
-            this.type = type;
-            this.time = time;
-        }
-    }
-
-    class Video {
-        @Override
-        public String toString() {
-            return "Video{" + "id=" + id + ", title=" + title + ", rating=" + rating + ", bookmarks=" + bookmarks + ", boxarts=" + boxarts + ", interestingMoments=" + interestingMoments + '}';
-        }
-
-        public int id;
-        public String title;
-        public double rating;
-        private ComposableList<Bookmark> bookmarks;
-        private ComposableList<BoxArt> boxarts;
-        private ComposableList<InterestingMoment> interestingMoments;
-
-        public Video(int id, String title, double rating) {
-            this.id = id;
-            this.title = title;
-            this.rating = rating;
-        }
-
-        public Video(int id, String title, double rating, ComposableList<Bookmark> bookmarks, ComposableList<BoxArt> boxarts) {
-            this(id, title, rating);
-            this.bookmarks = bookmarks;
-            this.boxarts = boxarts;
-        }
-
-        public Video(int id, String title, double rating, ComposableList<Bookmark> bookmarks, ComposableList<BoxArt> boxarts, ComposableList<InterestingMoment> interestingMoments) {
-            this(id, title, rating);
-            this.bookmarks = bookmarks;
-            this.boxarts = boxarts;
-            this.interestingMoments = interestingMoments;
-        }
-    }
-
-    class MovieList {
-        @Override
-        public String toString() {
-            return "MovieList{" + "name=" + name + ", videos=" + videos + '}';
-        }
-
-        public String name;
-        public ComposableList<Video> videos;
-
-        public MovieList(String name, ComposableList<Video> videos) {
-            this.name = name;
-            this.videos = videos;
-        }
-    }
-
-    // Custom JSON type
-    public static class JSON extends HashMap<String, Object> { };
 
     // This function can be used to build JSON objects within an expression
     private static JSON json(Object... keyOrValue) {
@@ -1218,8 +1085,8 @@ public class ComposableList<T> extends ArrayList<T> {
 
     // Static list builder method to allow us to easily build lists
     @SafeVarargs
-    public static <T> ComposableList<T> of(T... args) {
-        ComposableList<T> results = new ComposableList<T>();
+    public static <T> ComposableListExercises<T> of(T... args) {
+        ComposableListExercises<T> results = new ComposableListExercises<T>();
         for (T value : args) {
             results.add(value);
         }
