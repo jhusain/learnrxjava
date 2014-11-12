@@ -977,37 +977,46 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
+    /*
+    Exercise 24: Converting Lists to Trees
+
+    Now that we've learned the five operators let's flex our muscles and write some powerful queries.
+
+    When information is organized hierarchically, parent hold references to their children. In relational systems like databases, children hold references to their parents. Both ways of organizing information are equivalent, and depending on the circumstances we might get data organized in one way or another. It may surprise you to learn that you can use the methods you already know to easily convert between these representations. In other words, not only can you transform trees into lists, you can transform lists into trees.
+
+    We have 2 lists each containing lists, and videos respectively. Each video has a listId field indicating its parent list. We want to build a list of movie list objects, each with a name and a videos array. The videos list will contain the video's id and title. In other words we want to build the following structure:
+    */
     public static ComposableList<List<MovieList>> exercise24() {
         ComposableListExercises<MovieListRow> lists = ComposableListExercises.of(
             new MovieListRow(
-                    5434364,
-                    "New Releases"
+                5434364,
+                "New Releases"
             ),
             new MovieListRow(
-                    65456475,
-                    "Thrillers"
+                65456475,
+                "Thrillers"
             )
         );
         ComposableList<VideoRow> videos = ComposableListExercises.of(
             new VideoRow(
-                    5434364,
-                    65432445,
-                    "The Chamber"
+                5434364,
+                65432445,
+                "The Chamber"
             ),
             new VideoRow(
-                    5434364,
-                    675465,
-                    "Fracture"
+                5434364,
+                675465,
+                "Fracture"
             ),
             new VideoRow(
-                    65456475,
-                    70111470,
-                    "Die Hard"
+                65456475,
+                70111470,
+                "Die Hard"
             ),
             new VideoRow(
-                    65456475,
-                    654356453,
-                    "Bad Boys"
+                65456475,
+                654356453,
+                "Bad Boys"
             )
         );
 
@@ -1015,6 +1024,48 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
+    /*
+    Exercise 25: Converting Lists to Deeper Trees
+
+    Let's try creating a deeper tree structure. This time we have 4 seperate lists each containing movie lists, videos, boxarts, and bookmarks respectively. Each object has a parent id, indicating its parent. We want to build a list of movie list objects, each with a name and a videos array. The videos list will contain the video's id, title, bookmark time, and smallest boxart url. In other words we want to build the following structure:
+
+    [
+        {
+            "name": "New Releases",
+            "videos": [
+                {
+                    "id": 65432445,
+                    "title": "The Chamber",
+                    "time": 32432,
+                    "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg"
+                },
+                {
+                    "id": 675465,
+                    "title": "Fracture",
+                    "time": 3534543,
+                    "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture120.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Thrillers",
+            "videos": [
+                {
+                    "id": 70111470,
+                    "title": "Die Hard",
+                    "time": 645243,
+                    "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg"
+                },
+                {
+                    "id": 654356453,
+                    "title": "Bad Boys",
+                    "time": 984934,
+                    "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg"
+                }
+            ]
+        }
+    ]
+    */
     public static ComposableList<List<MovieList>> exercise25() {
         ComposableListExercises<MovieListRow> lists = ComposableListExercises.of(
             new MovieListRow(
