@@ -168,13 +168,13 @@ public class ObservableSolutionsTest {
         Map<Integer, JSON> map = getImpl().exerciseMovie(movies).toMap(i -> (int) i.get("id")).toBlocking().single();
         System.out.println(map);
         assertTrue(map.containsKey(70111470));
-        assertEquals(map.get(70111470).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/DieHard200.jpg, id=70111470, title=Die Hard}");
+        assertEquals(map.get(70111470).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/DieHard150.jpg, id=70111470, title=Die Hard}");
         assertTrue(map.containsKey(654356453));
-        assertEquals(map.get(654356453).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg, id=654356453, title=Bad Boys}");
+        assertEquals(map.get(654356453).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg, id=654356453, title=Bad Boys}");
         assertTrue(map.containsKey(65432445));
-        assertEquals(map.get(65432445).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg, id=65432445, title=The Chamber}");
+        assertEquals(map.get(65432445).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg, id=65432445, title=The Chamber}");
         assertTrue(map.containsKey(675465));
-        assertEquals(map.get(675465).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/Fracture300.jpg, id=675465, title=Fracture}");
+        assertEquals(map.get(675465).toString(), "{boxart=http://cdn-0.nflximg.com/images/2891/Fracture120.jpg, id=675465, title=Fracture}");
     }
 
     @Test

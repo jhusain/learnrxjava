@@ -7,7 +7,7 @@ import rx.Observable;
 public class ObservableExercises {
 
     /**
-     * Return an Observable that emits a single value "Hello World"
+     * Return an Observable that emits a single value "Hello World!"
      * 
      * @return "Hello World!"
      */
