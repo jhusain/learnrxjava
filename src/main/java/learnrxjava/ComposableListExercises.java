@@ -9,16 +9,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import learnrxjava.types.Bookmark;
-import learnrxjava.types.BookmarkRow;
 import learnrxjava.types.BoxArt;
-import learnrxjava.types.BoxArtRow;
 import learnrxjava.types.ComposableList;
 import learnrxjava.types.InterestingMoment;
 import learnrxjava.types.JSON;
 import learnrxjava.types.MovieList;
-import learnrxjava.types.MovieListRow;
 import learnrxjava.types.Video;
-import learnrxjava.types.VideoRow;
 
 /**
  * Mastering concurrency is challenging, But we can make it much easier by simply choosing the right 
@@ -473,7 +469,7 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
     If it's larger, we keep track of it. Finally we're left with a single boxart which must necessarily be the largest.
     */
     public static BoxArt exercise13() {
-        ComposableListSolution<BoxArt> boxarts = ComposableListSolution.of(
+        ComposableListSolutions<BoxArt> boxarts = ComposableListSolutions.of(
                 new BoxArt(200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
                 new BoxArt(150, 200, "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg"),
                 new BoxArt(425, 150, "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg"),
@@ -977,151 +973,6 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    /*
-    Exercise 24: Converting Lists to Trees
-
-    Now that we've learned the five operators let's flex our muscles and write some powerful queries.
-
-    When information is organized hierarchically, parent hold references to their children. In relational systems like databases, children hold references to their parents. Both ways of organizing information are equivalent, and depending on the circumstances we might get data organized in one way or another. It may surprise you to learn that you can use the methods you already know to easily convert between these representations. In other words, not only can you transform trees into lists, you can transform lists into trees.
-
-    We have 2 lists each containing lists, and videos respectively. Each video has a listId field indicating its parent list. We want to build a list of movie list objects, each with a name and a videos array. The videos list will contain the video's id and title. In other words we want to build the following structure:
-    */
-    public static ComposableList<List<MovieList>> exercise24() {
-        ComposableListExercises<MovieListRow> lists = ComposableListExercises.of(
-            new MovieListRow(
-                5434364,
-                "New Releases"
-            ),
-            new MovieListRow(
-                65456475,
-                "Thrillers"
-            )
-        );
-        ComposableList<VideoRow> videos = ComposableListExercises.of(
-            new VideoRow(
-                5434364,
-                65432445,
-                "The Chamber"
-            ),
-            new VideoRow(
-                5434364,
-                675465,
-                "Fracture"
-            ),
-            new VideoRow(
-                65456475,
-                70111470,
-                "Die Hard"
-            ),
-            new VideoRow(
-                65456475,
-                654356453,
-                "Bad Boys"
-            )
-        );
-
-        // return lists. // complete this expression
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /*
-    Exercise 25: Converting Lists to Deeper Trees
-
-    Let's try creating a deeper tree structure. This time we have 4 seperate lists each containing movie lists, videos, boxarts, and bookmarks respectively. Each object has a parent id, indicating its parent. We want to build a list of movie list objects, each with a name and a videos array. The videos list will contain the video's id, title, bookmark time, and smallest boxart url. In other words we want to build the following structure:
-
-    [
-        {
-            "name": "New Releases",
-            "videos": [
-                {
-                    "id": 65432445,
-                    "title": "The Chamber",
-                    "time": 32432,
-                    "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg"
-                },
-                {
-                    "id": 675465,
-                    "title": "Fracture",
-                    "time": 3534543,
-                    "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture120.jpg"
-                }
-            ]
-        },
-        {
-            "name": "Thrillers",
-            "videos": [
-                {
-                    "id": 70111470,
-                    "title": "Die Hard",
-                    "time": 645243,
-                    "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg"
-                },
-                {
-                    "id": 654356453,
-                    "title": "Bad Boys",
-                    "time": 984934,
-                    "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg"
-                }
-            ]
-        }
-    ]
-    */
-    public static ComposableList<List<MovieList>> exercise25() {
-        ComposableListExercises<MovieListRow> lists = ComposableListExercises.of(
-            new MovieListRow(
-                5434364,
-                "New Releases"
-            ),
-            new MovieListRow(
-                65456475,
-                "Thrillers"
-            )
-        );
-        ComposableListExercises<VideoRow>  videos = ComposableListExercises.of(
-            new VideoRow(
-                5434364,
-                65432445,
-                "The Chamber"
-            ),
-            new VideoRow(
-                5434364,
-                675465,
-                "Fracture"
-            ),
-            new VideoRow(
-                65456475,
-                70111470,
-                "Die Hard"
-            ),
-            new VideoRow(
-                65456475,
-                654356453,
-                "Bad Boys"
-            )
-        );
-        ComposableListExercises<BoxArtRow> boxarts = ComposableListExercises.of(
-                new BoxArtRow(65432445, 130, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber130.jpg"),
-                new BoxArtRow(65432445, 200, 200, "http://cdn-0.nflximg.com/images/2891/TheChamber200.jpg"),
-                new BoxArtRow(675465, 200, 200, "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg"),
-                new BoxArtRow(675465, 120, 200, "http://cdn-0.nflximg.com/images/2891/Fracture120.jpg"),
-                new BoxArtRow(675465, 300, 200, "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg"),
-                new BoxArtRow(70111470, 150, 200, "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg"),
-                new BoxArtRow(70111470, 200, 200, "http://cdn-0.nflximg.com/images/2891/DieHard200.jpg"),
-                new BoxArtRow(654356453, 200, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys200.jpg"),
-                new BoxArtRow(654356453, 140, 200, "http://cdn-0.nflximg.com/images/2891/BadBoys140.jpg")
-        );
-        ComposableListExercises<BookmarkRow> bookmarks = ComposableListExercises.of(
-                new BookmarkRow(65432445, 32432),
-                new BookmarkRow(675465, 3534543),
-                new BookmarkRow(70111470, 645243),
-                new BookmarkRow(654356453, 984934)
-        );
-
-        // return lists. // complete this expression
-        
-        throw new UnsupportedOperationException("Not implemented yet.");
-
-    }
 
     // This function can be used to build JSON objects within an expression
     private static JSON json(Object... keyOrValue) {
@@ -1139,6 +990,14 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
     public static <T> ComposableListExercises<T> of(T... args) {
         ComposableListExercises<T> results = new ComposableListExercises<T>();
         for (T value : args) {
+            results.add(value);
+        }
+        return results;
+    }
+    
+    public static <T> ComposableListSolutions<T> of(List<T> list) {
+        ComposableListSolutions<T> results = new ComposableListSolutions<T>();
+        for (T value : list) {
             results.add(value);
         }
         return results;

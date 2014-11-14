@@ -2,8 +2,8 @@ package learnrxjava.types;
 
 public class MovieListRow {
 
-    private int id;
-    private String name;
+    public int id;
+    public String name;
 
     public MovieListRow(int id, String name) {
         this.id = id;

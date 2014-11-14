@@ -2,9 +2,9 @@ package learnrxjava.types;
 
 public class VideoRow {
 
-    private int listId;
-    private int videoId;
-    private String name;
+    public int listId;
+    public int videoId;
+    public String name;
 
     public VideoRow(int listId, int videoId, String name) {
         this.listId = listId;
