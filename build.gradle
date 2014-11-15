@@ -1,0 +1,16 @@
+apply plugin: "java"
+
+group = "io.reactivex"
+version = "1.0-SNAPSHOT"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "io.reactivex:rxjava:1.0.0-rc.10"
+    testCompile "junit:junit:4.11"
+}
