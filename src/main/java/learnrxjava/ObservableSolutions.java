@@ -98,7 +98,7 @@ public class ObservableSolutions extends ObservableExercises {
                 return v.boxarts.reduce((max, box) -> {
                     int maxSize = max.height * max.width;
                     int boxSize = box.height * box.width;
-                    if (boxSize > maxSize) {
+                    if (boxSize < maxSize) {
                         return box;
                     } else {
                         return max;

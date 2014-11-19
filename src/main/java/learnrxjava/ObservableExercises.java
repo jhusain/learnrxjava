@@ -7,7 +7,7 @@ import rx.Observable;
 public class ObservableExercises {
 
     /**
-     * Return an Observable that emits a single value "Hello World"
+     * Return an Observable that emits a single value "Hello World!"
      * 
      * @return "Hello World!"
      */
@@ -72,7 +72,7 @@ public class ObservableExercises {
     }
 
     /**
-     * Retrieve the id, title, and smallest box art url for every video.
+     * Retrieve the id, title, and <b>smallest</b> box art url for every video.
      * 
      * Now let's try combining reduce() with our other functions to build more complex queries.
      * 
